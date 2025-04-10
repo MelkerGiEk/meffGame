@@ -85,7 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else {
         lives--;
+        money += 10;
         enemies.splice(enemies.indexOf(this), 1);
+        updateMoneyCounter();
         updateLivesCounter();
       }
     }
