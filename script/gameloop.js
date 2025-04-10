@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.height = 500;
   const gridSize = 50;
   const moneyCounter = document.querySelector(".money-counter"); // Select the money counter
+  const livesCounter = document.querySelector(".lives-counter"); // Select the lives counter
 
   const pathCoordinates = [
     [0, 4],
@@ -51,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let towers = [];
   let projectiles = [];
   let frame = 0;
-  let money = 200;
-  let lives = 10;
+  let money = 150;
+  let lives = 20;
 
   const path = pathCoordinates.map(([col, row]) => ({
     x: col * gridSize + gridSize / 2,
@@ -85,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         lives--;
         enemies.splice(enemies.indexOf(this), 1);
+        updateLivesCounter();
       }
     }
     draw() {
@@ -172,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (frame % 100 === 0) {
+    if (frame % 100 === 0 || frame % 125 === 0) {
       enemies.push(new Enemy());
     }
     enemies.forEach((enemy) => {
@@ -194,8 +196,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateMoneyCounter() {
     moneyCounter.textContent = `Money: $${money}`;
   }
+  function updateLivesCounter() {
+    livesCounter.textContent = `Lives: ${lives}`;
+  }
+
   // Update money counter initially
   updateMoneyCounter();
+  // Update lives counter initially
+  updateLivesCounter();
 
   //Tar hand om torn när man klickar(placerar torn. Detta ska vi fixa senare.)
   canvas.addEventListener("click", (event) => {
