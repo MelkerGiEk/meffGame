@@ -60,8 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
     y: row * gridSize + gridSize / 2,
   }));
 
-  let isGameRunning = true; // Flagga för att kontrollera spelets status
-
   class Enemy {
     constructor() {
       this.currentPoint = 0;
@@ -173,6 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fill();
     }
   }
+
+  let isGameRunning = true; // Flagga för att kontrollera spelets status
+  // Starta spelet när sidan laddas
 
   function gameLoop() {
     //stoppar spelloppen vid lives =<0
