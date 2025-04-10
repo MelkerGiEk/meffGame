@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     frame++;
     requestAnimationFrame(gameLoop);
   }
-
+  //Tar hand om torn när man klickar(placerar torn. Detta ska vi fixa senare.)
   canvas.addEventListener("click", (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / gridSize) * gridSize;
