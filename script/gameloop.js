@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let projectiles = [];
   let frame = 0;
   let money = 150;
-  let lives = 20;
+  let lives = 10;
 
   const path = pathCoordinates.map(([col, row]) => ({
     x: col * gridSize + gridSize / 2,
@@ -179,9 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
     //stoppar spelloppen vid lives =<0
     if (!isGameRunning) return; // Stoppar loopen
     if (lives <= 0) {
-      //alert("Game Over! You lost all your lives.");
       console.log("Game Over! You lost all your lives.");
       isGameRunning = false; // Stoppa spelet
+      alert("Game Over! You lost all your lives."); // Visar ett slutsmeddelande vid förlust
       return;
     }
 
