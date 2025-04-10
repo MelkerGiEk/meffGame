@@ -3,12 +3,16 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #ccc;
     margin: 0;
+    background-color: #ccc;
+}
+body{
+    background-image: url(../img/gamebackground.jpg);
 }
 
 .game-container {
-    position: relative;
+    position: relative; 
+    margin: auto;
 }
 
 .grid {
@@ -40,15 +44,21 @@ canvas {
 }
 
 .money-counter {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
     font-size: 20px;
     font-weight: bold;
     color: #fff;
     background-color: #333;
-    padding: 5px 10px;
     border-radius: 5px;
     z-index: 10;
 }
+
+.menu{
+    display: flex;
+    flex-direction: column;
+    height:100vh; 
+    width: 30vw; 
+    align-items: right; 
+    background-color: rgb(104, 44, 9); 
+
+}
+
