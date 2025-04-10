@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.width = 800;
   canvas.height = 500;
   const gridSize = 50;
+  const moneyCounter = document.querySelector(".money-counter"); // Select the money counter
 
   const pathCoordinates = [
     [0, 4],
@@ -153,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
           this.target.isDead = true;
           enemies.splice(enemies.indexOf(this.target), 1);
           money += 10;
+          updateMoneyCounter();
         }
       } else {
         this.x += (dx / distance) * this.speed;
@@ -188,6 +190,13 @@ document.addEventListener("DOMContentLoaded", () => {
     frame++;
     requestAnimationFrame(gameLoop);
   }
+
+  function updateMoneyCounter() {
+    moneyCounter.textContent = `Money: $${money}`;
+  }
+  // Update money counter initially
+  updateMoneyCounter();
+
   //Tar hand om torn när man klickar(placerar torn. Detta ska vi fixa senare.)
   canvas.addEventListener("click", (event) => {
     const rect = canvas.getBoundingClientRect();
@@ -199,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isPath && money >= 50) {
       towers.push(new Tower(x, y));
       money -= 50;
+      updateMoneyCounter(); // Update the money counter
     }
   });
 

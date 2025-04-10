@@ -38,3 +38,17 @@ canvas {
     top: 0;
     left: 0;
 }
+
+.money-counter {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    z-index: 10;
+}
