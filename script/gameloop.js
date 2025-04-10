@@ -60,6 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     y: row * gridSize + gridSize / 2,
   }));
 
+  let isGameRunning = true; // Flagga för att kontrollera spelets status
+
   class Enemy {
     constructor() {
       this.currentPoint = 0;
@@ -173,6 +175,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function gameLoop() {
+    //stoppar spelloppen vid lives =<0
+    if (!isGameRunning) return; // Stoppar loopen
+    if (lives <= 0) {
+      //alert("Game Over! You lost all your lives.");
+      console.log("Game Over! You lost all your lives.");
+      isGameRunning = false; // Stoppa spelet
+      return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (frame % 100 === 0 || frame % 125 === 0) {
       enemies.push(new Enemy());
