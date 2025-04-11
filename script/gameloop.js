@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("gameCanvas");
+  // @type {canvasRenderingContext2D}
   const ctx = canvas.getContext("2d");
   canvas.width = 800;
   canvas.height = 500;
@@ -7,10 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const moneyCounter = document.querySelector(".money-counter"); // Select the money counter
   const livesCounter = document.querySelector(".lives-counter"); // Select the lives counter
 
-  const cursor = document.getElementById("cursor");
+  const cursor = document.getElementById("custom-cursor");
+  cursor.style.width = `150px`;
+  cursor.style.height = `150px`;
+
   document.addEventListener("mousemove", (e) => {
-    cursor.style.left = `${e.clientX - 10}px`;
-    cursor.style.top = `${e.clientY - 10}px`;
+    cursor.style.left = `${e.clientX + 10}px`;
+    cursor.style.top = `${e.clientY + 10}px`;
   });
 
   const pathCoordinates = [
@@ -180,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  let isGameRunning = true; // Flagga för att kontrollera spelets status
+  let isGameRunning = false; // Flagga för att kontrollera spelets status
   // Starta spelet när sidan laddas
 
   function gameLoop() {
@@ -240,7 +244,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  gameLoop();
+  function headMenu() {
+    const startButton = document.getElementById("start-button");
+
+    startButton.addEventListener("click", () => {
+      isGameRunning = true; // Starta spelet
+      gameLoop();
+    });
+  }
+  headMenu(); // Starta menyn när sidan laddas
+  // gameLoop();
 });
 
 // projektil som percar!
