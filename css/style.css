@@ -5,6 +5,7 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #ccc;
+    cursor: none;
 }
 body{
     background-image: url(../img/gamebackground.jpg);
@@ -78,4 +79,13 @@ img {
     max-width: 20px;
     position: absolute;
     opacity: 0.8;
+}
+
+.custom-cursor {
+    position: absolute;
+    width: 32px; 
+    height: 32px; 
+    pointer-events: none; 
+    transform:translate(-50%, -50%);
+    z-index: 1001; 
 }
