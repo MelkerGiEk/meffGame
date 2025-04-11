@@ -7,6 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const moneyCounter = document.querySelector(".money-counter"); // Select the money counter
   const livesCounter = document.querySelector(".lives-counter"); // Select the lives counter
 
+  const cursor = document.getElementById("cursor");
+  document.addEventListener("mousemove", (e) => {
+    cursor.style.left = `${e.clientX - 10}px`;
+    cursor.style.top = `${e.clientY - 10}px`;
+  });
+
   const pathCoordinates = [
     [0, 4],
     [1, 4],
