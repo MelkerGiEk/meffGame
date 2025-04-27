@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   cursor.style.height = `150px`;
 
   document.addEventListener("mousemove", (e) => {
-    cursor.style.left = `${e.clientX + 10}px`;
-    cursor.style.top = `${e.clientY + 10}px`;
+    cursor.style.left = `${e.clientX + 5}px`;
+    cursor.style.top = `${e.clientY + 5}px`;
   });
 
   const pathCoordinates = [
@@ -64,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let frame = 0;
   let money = 150;
   let lives = 10;
+  let gameSpeed = 1; // Default game speed
+  let selectedTowerType = "none"; // Exempel: ändra detta baserat på användarens val
 
   const path = pathCoordinates.map(([col, row]) => ({
     x: col * gridSize + gridSize / 2,
@@ -76,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.x = path[0].x;
       this.y = path[0].y;
       this.size = gridSize * 0.8;
-      this.speed = 2;
+      this.speed = 2 * gameSpeed; // Hastighet för fienden som skapas
       this.health = 3;
       this.isDead = false;
     }
@@ -118,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.y = y + gridSize / 2;
       this.size = gridSize * 0.5;
       this.range = 200;
-      this.fireRate = 50;
+      this.fireRate = 50 / gameSpeed;
       this.lastShot = 0;
     }
     draw() {
@@ -143,12 +145,88 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  class ArcherTower extends Tower {
+    constructor(x, y) {
+      super(x, y); // Anropa basklassens konstruktor
+      this.range = 250; // Längre räckvidd
+      this.fireRate = 40 / gameSpeed; // Snabbare skott
+      this.color = "red"; // Specifik färg för Archer Tower
+      this.name = "Archer Tower"; // Namn på tornet
+    }
+
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(
+        this.x - this.size / 2,
+        this.y - this.size / 2,
+        this.size,
+        this.size
+      );
+    }
+
+    shoot() {
+      if (frame - this.lastShot > this.fireRate) {
+        let target = enemies.find(
+          (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
+        );
+        if (target) {
+          projectiles.push(new Projectile(this.x, this.y, target));
+          this.lastShot = frame;
+        }
+      }
+    }
+  }
+
+  class WizardTower extends Tower {
+    constructor(x, y) {
+      super(x, y); // Anropa basklassens konstruktor
+      this.range = 200; // Kortare räckvidd
+      this.fireRate = 60 / gameSpeed; // Långsammare skott
+      this.color = "purple"; // Specifik färg för Wizard Tower
+      this.splashDamage = 1; // Skada på flera fiender
+      this.name = "Wizard Tower"; // Namn på tornet
+    }
+
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(
+        this.x - this.size / 2,
+        this.y - this.size / 2,
+        this.size,
+        this.size
+      );
+    }
+
+    shoot() {
+      if (frame - this.lastShot > this.fireRate) {
+        let target = enemies.find(
+          (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
+        );
+        if (target) {
+          // Splash damage: påverkar flera fiender inom en radie
+          enemies.forEach((enemy) => {
+            if (Math.hypot(enemy.x - target.x, enemy.y - target.y) < 50) {
+              enemy.health -= this.splashDamage;
+              if (enemy.health <= 0) {
+                enemy.isDead = true;
+                enemies.splice(enemies.indexOf(enemy), 1);
+                money += 10;
+                updateMoneyCounter();
+              }
+            }
+          });
+          this.lastShot = frame;
+        }
+      }
+    }
+  }
+
   class Projectile {
     constructor(x, y, target) {
       this.x = x;
       this.y = y;
       this.target = target;
-      this.speed = 6;
+      this.speed = 6 * gameSpeed;
     }
     move() {
       if (this.target.isDead) {
@@ -224,9 +302,9 @@ document.addEventListener("DOMContentLoaded", () => {
     livesCounter.textContent = `Lives: ${lives}`;
   }
 
-  // Update money counter initially
+  // Update money counter on page load
   updateMoneyCounter();
-  // Update lives counter initially
+  // Update lives counter on page load
   updateLivesCounter();
 
   //Tar hand om torn när man klickar(placerar torn. Detta ska vi fixa senare.)
@@ -238,78 +316,61 @@ document.addEventListener("DOMContentLoaded", () => {
       ([px, py]) => px * gridSize === x && py * gridSize === y
     );
     if (!isPath && money >= 50) {
-      towers.push(new Tower(x, y));
-      money -= 50;
-      updateMoneyCounter(); // Update the money counter
+      // Välj torn baserat på användarens val
+      if (selectedTowerType === "Archer Tower") {
+        towers.push(new ArcherTower(x, y));
+        money -= 50;
+        updateMoneyCounter(); // Update the money counter
+      }
     }
   });
 
   function headMenu() {
     const startButton = document.getElementById("start-button");
+    const speedButton = document.getElementById("speed-button");
+    const archerButton = document.getElementById("archer-button");
+    console.log("Archer Button:", archerButton);
 
     startButton.addEventListener("click", () => {
-      isGameRunning = true; // Starta spelet
-      gameLoop();
+      if (isGameRunning === false) {
+        isGameRunning = true; // Starta spelet
+        gameLoop();
+        startButton.textContent = "Pause"; // Ändra texten på knappen
+      } else if (isGameRunning === true) {
+        isGameRunning = false; // Stoppa spelet
+        startButton.textContent = "Start"; // Ändra texten på knappen
+      }
     });
+    speedButton.addEventListener("click", () => {
+      if (isGameRunning === true) {
+        if (gameSpeed === 1) {
+          gameSpeed = 2; // Öka hastigheten
+          speedButton.textContent = "Speed: 2x";
+          // Öka hastigheten för fienderna som redan finns
+          enemies.forEach((enemy) => {
+            enemy.speed = 2 * gameSpeed;
+          });
+          return gameSpeed;
+        } else if (gameSpeed === 2) {
+          gameSpeed = 1; // Återställ hastigheten
+          speedButton.textContent = "Speed: 1x";
+          return gameSpeed;
+        }
+      } else if (isGameRunning === false) {
+        gameSpeed = 1; // Återställ hastigheten
+        return frame;
+      }
+    });
+    if (!archerButton) {
+      console.error("Archer button not found!");
+    } else {
+      archerButton.addEventListener("click", () => {
+        console.log("Archer Tower selected");
+        selectedTowerType = "Archer Tower";
+      });
+    }
   }
   headMenu(); // Starta menyn när sidan laddas
-  // gameLoop();
 });
 
 // projektil som percar!
-
-// class Projectile_wizard {
-//   constructor(x, y, target) {
-//     this.x = x;
-//     this.y = y;
-//     this.target = target;
-//     this.speed = 6;
-//     this.dx = 0;
-//     this.dy = 0;
-//     this.active = true;
-
-//     // Räkna ut riktningen direkt vid skapande
-//     let diffX = target.x - x;
-//     let diffY = target.y - y;
-//     let dist = Math.hypot(diffX, diffY);
-//     this.dx = (diffX / dist) * this.speed;
-//     this.dy = (diffY / dist) * this.speed;
-//   }
-
-//   move() {
-//     if (!this.active) return;
-
-//     // Kolla träff om målet fortfarande lever
-//     if (this.target && !this.target.isDead) {
-//       let distance = Math.hypot(this.target.x - this.x, this.target.y - this.y);
-//       if (distance < this.speed + this.target.size / 2) {
-//         this.target.health--;
-//         if (this.target.health <= 0) {
-//           this.target.isDead = true;
-//           enemies.splice(enemies.indexOf(this.target), 1);
-//           money += 10;
-//         }
-//         this.target = null; // Ta bort målet, men fortsätt flyga
-//       }
-//     }
-
-//     // Fortsätt flyga i samma riktning
-//     this.x += this.dx;
-//     this.y += this.dy;
-
-//     // Ta bort projektil om den är utanför canvas
-//     if (
-//       this.x < 0 || this.x > canvas.width ||
-//       this.y < 0 || this.y > canvas.height
-//     ) {
-//       projectiles.splice(projectiles.indexOf(this), 1);
-//     }
-//   }
-
-//   draw() {
-//     ctx.fillStyle = "black";
-//     ctx.beginPath();
-//     ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
-//     ctx.fill();
-//   }
-// }
