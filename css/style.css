@@ -71,7 +71,7 @@ canvas {
     
 }
 
-.archer-button {
+#archer-button, #wizard-button{
     display:flex;
     padding: 5px; 
     margin: 10px 25px; 
@@ -80,21 +80,37 @@ canvas {
     max-width: 25px; 
     width: 25px;
     font-size: 10px;
-    background-color: red;
     z-index: 5;
 }
 
-.archer-button:hover {
-    background-color: #f8d2d252;
+#archer-button:hover {
+    background-color: #eb2727;
     transform: scale(1.1);
     transition: all ease-in-out 0.2s;
+    box-shadow: 0 2px 4px rgba(187, 142, 142, 0.945);
     cursor: none; 
 }
 
-.archer-button:active {
-    background-color: #7a0808;
+#wizard-button:hover {
+    background-color: #ac07a3;
+    transform: scale(1.1);
+    transition: all ease-in-out 0.2s;
+    box-shadow: 0 2px 4px rgba(194, 143, 194, 0.945);
+    cursor: none; 
+}
+
+#archer-button:active, #wizard-button:active {
+    background-color: #7c7878;
     transform: scale(0.9);
     transition: all ease-in-out 0.2s;
+}
+
+#archer-button{
+    background-color: red;
+}
+
+#wizard-button{
+    background-color: purple;
 }
 
 .menu {
@@ -116,7 +132,7 @@ canvas {
     background-color: rgb(104, 44, 9); 
 }
 
-.start-button {
+#start-button {
     background-color: #4CAF50; 
     border: none;
     color: white;
@@ -131,11 +147,11 @@ canvas {
     cursor: none;
 }
 
-.start-button:hover {
+#start-button:hover {
     cursor: none;
 }
 
-.speed-button {
+#speed-button {
     background-color: #4CAF50; 
     border: none;
     color: white;
@@ -150,7 +166,7 @@ canvas {
     cursor: none;
 }
 
-.speed-button:hover {
+#speed-button:hover {
     cursor: none;
 }
 
