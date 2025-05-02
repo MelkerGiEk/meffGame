@@ -71,8 +71,7 @@ canvas {
     
 }
 
-#archer-button, #wizard-button{
-    display:flex;
+#archer-button, #wizard-button, #knight-button {
     padding: 5px; 
     margin: 10px 25px; 
     height: 25px; 
@@ -99,18 +98,33 @@ canvas {
     cursor: none; 
 }
 
-#archer-button:active, #wizard-button:active {
+#knight-button:hover {
+    background-color: #31485a;
+    transform: scale(1.1);
+    transition: all ease-in-out 0.2s;
+    box-shadow: 1px 2px 4px rgba(194, 143, 194, 0.945);
+    cursor: none; 
+}
+
+#archer-button:active, #wizard-button:active, #knight-button:active {
     background-color: #7c7878;
     transform: scale(0.9);
     transition: all ease-in-out 0.2s;
 }
 
 #archer-button{
-    background-color: red;
+    background-color: rgb(221, 44, 44);
+    cursor:none;
 }
 
 #wizard-button{
-    background-color: purple;
+    background-color: rgb(104, 21, 104);
+    cursor:none;
+}
+
+#knight-button{
+    background-color: rgb(41, 51, 59);
+    cursor:none;
 }
 
 .menu {
@@ -123,8 +137,7 @@ canvas {
 }
 
 .tower-container {
-    display: flex;
-    flex-direction: column;
+    display:flex;
     justify-content: baseline;
     align-items: baseline;
     height: 100vh; 

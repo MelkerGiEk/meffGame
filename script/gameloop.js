@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
     static cost = 50;
     constructor(x, y) {
       super(x, y); // Anropa basklassens konstruktor
-      this.range = 150;
+      this.range = 200;
       this.fireRate = 40 / gameSpeed; // Snabbare skott
       this.color = "red"; // Specifik färg för Archer Tower
       this.name = "Archer Tower"; // Namn på tornet
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
     static cost = 100;
     constructor(x, y) {
       super(x, y); // Anropa basklassens konstruktor
-      this.range = 100;
+      this.range = 120;
       this.fireRate = 18 / gameSpeed; // Långsammare skott
       this.color = "purple"; // Specifik färg för Wizard Tower
       this.name = "Wizard Tower"; // Namn på tornet
@@ -288,6 +288,39 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         if (target) {
           projectiles.push(new PiercingProjectile(this.x, this.y, target));
+          this.lastShot = frame;
+        }
+      }
+    }
+  }
+
+  class KnightTower extends Tower {
+    static cost = 75;
+    constructor(x, y) {
+      super(x, y); // Anropa basklassens konstruktor
+      this.range = 150;
+      this.fireRate = 30 / gameSpeed; // Snabbare skott
+      this.color = "black"; // Specifik färg för Archer Tower
+      this.name = "Archer Tower"; // Namn på tornet
+    }
+
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(
+        this.x - this.size / 2,
+        this.y - this.size / 2,
+        this.size,
+        this.size
+      );
+    }
+
+    shoot() {
+      if (frame - this.lastShot > this.fireRate) {
+        let target = enemies.find(
+          (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
+        );
+        if (target) {
+          projectiles.push(new Projectile(this.x, this.y, target));
           this.lastShot = frame;
         }
       }
@@ -371,6 +404,13 @@ document.addEventListener("DOMContentLoaded", () => {
         towers.push(new WizardTower(x, y));
         money -= WizardTower.cost;
         updateMoneyCounter(); // Update the money counter
+      } else if (
+        selectedTowerType === "Knight Tower" &&
+        money >= KnightTower.cost
+      ) {
+        towers.push(new KnightTower(x, y));
+        money -= KnightTower.cost;
+        updateMoneyCounter(); // Update the money counter
       }
     }
   });
@@ -380,8 +420,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const speedButton = document.getElementById("speed-button");
     const archerButton = document.getElementById("archer-button");
     const wizardButton = document.getElementById("wizard-button");
+    const knightButton = document.getElementById("knight-button");
     console.log("Wizard Button:", wizardButton);
     console.log("Archer Button:", archerButton);
+    console.log("Knight Button:", knightButton);
 
     startButton.addEventListener("click", () => {
       if (isGameRunning === false) {
@@ -434,6 +476,16 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedTowerType = "Wizard Tower";
           }
         });
+        if (!knightButton) {
+          console.error("Knight button not found!");
+        } else {
+          knightButton.addEventListener("click", () => {
+            if (isGameRunning === true) {
+              console.log("Knight Tower selected");
+              selectedTowerType = "Knight Tower";
+            }
+          });
+        }
       }
     }
   }
