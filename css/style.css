@@ -54,7 +54,7 @@ canvas {
     font-weight: bold;
     color: #faf8d6;
     background-color: #ecb213cc;
-    border-radius: 3px;
+    border-radius: 1px;
     z-index: 5;
 }
 
@@ -64,7 +64,7 @@ canvas {
     font-weight: bold;
     color: #f8d2d2;
     background-color: #ec2207de;
-    border-radius: 3px;
+    border-radius: 1px;
     z-index: 5;
     display: flex;
     flex: column;

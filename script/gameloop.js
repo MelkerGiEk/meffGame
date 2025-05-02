@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     draw() {
-      ctx.fillStyle = "black";
+      ctx.fillStyle = "red";
       ctx.beginPath();
       ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
       ctx.fill();
@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
     static cost = 50;
     constructor(x, y) {
       super(x, y); // Anropa basklassens konstruktor
-      this.range = 250; // Längre räckvidd
+      this.range = 150;
       this.fireRate = 40 / gameSpeed; // Snabbare skott
       this.color = "red"; // Specifik färg för Archer Tower
       this.name = "Archer Tower"; // Namn på tornet
@@ -265,10 +265,9 @@ document.addEventListener("DOMContentLoaded", () => {
     static cost = 100;
     constructor(x, y) {
       super(x, y); // Anropa basklassens konstruktor
-      this.range = 200; // Kortare räckvidd
+      this.range = 100;
       this.fireRate = 18 / gameSpeed; // Långsammare skott
       this.color = "purple"; // Specifik färg för Wizard Tower
-      this.splashDamage = 1; // Skada på flera fiender
       this.name = "Wizard Tower"; // Namn på tornet
     }
 
