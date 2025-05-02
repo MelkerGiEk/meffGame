@@ -297,32 +297,43 @@ document.addEventListener("DOMContentLoaded", () => {
   let isGameRunning = false; // Flagga för att kontrollera spelets status
   // Starta spelet när sidan laddas
 
+  let enemySpawnTimer = 100; // Tid mellan spawn i frames
+  let enemySpawnInterval = 100; // Standard spawn-intervall
+
   function gameLoop() {
-    //stoppar spelloppen vid lives =<0
-    if (!isGameRunning) return; // Stoppar loopen
+    // Stoppar spelloppen vid lives <= 0
+    if (!isGameRunning) return;
     if (lives <= 0) {
       console.log("Game Over! You lost all your lives.");
-      isGameRunning = false; // Stoppa spelet
-      alert("Game Over! You lost all your lives."); // Visar ett slutsmeddelande vid förlust
+      isGameRunning = false;
+      alert("Game Over! You lost all your lives.");
       return;
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (frame % 100 === 0 || frame % 125 === 0) {
+
+    // Hantera fiendespawn
+    enemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
+    if (enemySpawnTimer <= 0) {
       enemies.push(new Enemy());
+      enemySpawnTimer = enemySpawnInterval; // Återställ spawn-timern
     }
+
     enemies.forEach((enemy) => {
       enemy.move();
       enemy.draw();
     });
+
     towers.forEach((tower) => {
       tower.draw();
       tower.shoot();
     });
+
     projectiles.forEach((projectile) => {
       projectile.move();
       projectile.draw();
     });
+
     frame++;
     requestAnimationFrame(gameLoop);
   }
@@ -395,6 +406,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (gameSpeed === 2) {
           gameSpeed = 1; // Återställ hastigheten
           speedButton.textContent = "Speed: 1x";
+          enemies.forEach((enemy) => {
+            enemy.speed = 2 / gameSpeed;
+          });
           return gameSpeed;
         }
       } else if (isGameRunning === false) {
