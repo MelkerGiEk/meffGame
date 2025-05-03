@@ -156,27 +156,28 @@ canvas {
     z-index: 1;
 }
 
-.dropdown_archer, .dropdown_wizard, .dropdown_knight {
+.dropdown-archer, .dropdown-wizard, .dropdown-knight {
     display: none;
 	position: absolute; 
     left: 0;
 	min-width: 100px; 
 	padding: 5px 10px; 
 	margin-top: -2px;
+    font-size: 10px;
 	z-index: 10;
     box-shadow: 1px 2px 4px rgba(194, 143, 194, 0.945);
 	border-radius: 8px; 
 }
 
-.dropdown1:hover .dropdown_archer {
+.dropdown1:hover .dropdown-archer {
 	display: block; 
 }
 
-.dropdown2:hover .dropdown_wizard {
+.dropdown2:hover .dropdown-wizard {
 	display: block;
 }
 
-.dropdown3:hover .dropdown_knight {
+.dropdown3:hover .dropdown-knight {
     display: block; 
 }
 

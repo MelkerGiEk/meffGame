@@ -114,6 +114,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  class smallEnemy extends Enemy {
+    constructor() {
+      super(); // Anropa basklassens konstruktor
+      this.size = gridSize * 0.4; // Ändra storleken för den lilla fienden
+      this.speed = 3 * gameSpeed; // Snabbare hastighet för den lilla fienden
+      this.health = 1; // Lägre hälsa för den lilla fienden
+    }
+    draw() {
+      ctx.fillStyle = "lightgreen"; // Ändra färgen för den lilla fienden
+      ctx.fillRect(
+        this.x - this.size / 2,
+        this.y - this.size / 2,
+        this.size,
+        this.size
+      );
+    }
+  }
+
   class Projectile {
     constructor(x, y, target) {
       this.x = x;
@@ -350,6 +368,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (enemySpawnTimer <= 0) {
       enemies.push(new Enemy());
       enemySpawnTimer = enemySpawnInterval; // Återställ spawn-timern
+    }
+
+    if (enemySpawnTimer >= 100) {
+      enemies.push(new smallEnemy());
+      enemySpawnTimer = enemySpawnInterval;
     }
 
     enemies.forEach((enemy) => {
