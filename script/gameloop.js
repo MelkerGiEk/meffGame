@@ -77,11 +77,12 @@ document.addEventListener("DOMContentLoaded", () => {
       this.currentPoint = 0;
       this.x = path[0].x;
       this.y = path[0].y;
-      this.size = gridSize * 0.8;
+      this.size = gridSize * 0.75;
       this.speed = 2 * gameSpeed; // Hastighet för fienden som skapas
       this.health = 3;
       this.isDead = false;
     }
+
     move() {
       if (this.currentPoint < path.length - 1) {
         let nextPoint = path[this.currentPoint + 1];
@@ -96,15 +97,16 @@ document.addEventListener("DOMContentLoaded", () => {
           this.y += (dy / distance) * this.speed;
         }
       } else {
-        lives--;
+        lives -= 1;
         money += 10;
         enemies.splice(enemies.indexOf(this), 1);
         updateMoneyCounter();
         updateLivesCounter();
       }
     }
+
     draw() {
-      ctx.fillStyle = "darkgreen";
+      ctx.fillStyle = "green";
       ctx.fillRect(
         this.x - this.size / 2,
         this.y - this.size / 2,
@@ -114,15 +116,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  class smallEnemy extends Enemy {
+  class slowEnemy extends Enemy {
     constructor() {
       super(); // Anropa basklassens konstruktor
-      this.size = gridSize * 0.4; // Ändra storleken för den lilla fienden
-      this.speed = 3 * gameSpeed; // Snabbare hastighet för den lilla fienden
-      this.health = 1; // Lägre hälsa för den lilla fienden
+      this.size = gridSize * 0.85; // Ändra storleken för den lilla fienden
+      this.speed = 1.2 * gameSpeed; // Snabbare hastighet för den lilla fienden
+      this.health = 5; // Lägre hälsa för den lilla fienden
     }
+
     draw() {
-      ctx.fillStyle = "lightgreen"; // Ändra färgen för den lilla fienden
+      ctx.fillStyle = "darkgreen"; // Ändra färgen för den lilla fienden
       ctx.fillRect(
         this.x - this.size / 2,
         this.y - this.size / 2,
@@ -351,6 +354,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let enemySpawnTimer = 100; // Tid mellan spawn i frames
   let enemySpawnInterval = 100; // Standard spawn-intervall
 
+  let slowEnemySpawnTimer = 100; // Tid mellan spawn i frames
+  let slowEnemySpawnInterval = 100; // Standard spawn-intervall
+
   function gameLoop() {
     // Stoppar spelloppen vid lives <= 0
     if (!isGameRunning) return;
@@ -370,9 +376,10 @@ document.addEventListener("DOMContentLoaded", () => {
       enemySpawnTimer = enemySpawnInterval; // Återställ spawn-timern
     }
 
-    if (enemySpawnTimer >= 100) {
-      enemies.push(new smallEnemy());
-      enemySpawnTimer = enemySpawnInterval;
+    slowEnemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
+    if ((slowEnemySpawnTimer = 100 && frame % 300 === 0)) {
+      enemies.push(new slowEnemy());
+      slowEnemySpawnTimer = slowEnemySpawnInterval;
     }
 
     enemies.forEach((enemy) => {
