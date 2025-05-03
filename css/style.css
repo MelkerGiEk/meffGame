@@ -115,16 +115,19 @@ canvas {
 #archer-button{
     background-color: rgb(221, 44, 44);
     cursor:none;
+    z-index: 5; 
 }
 
 #wizard-button{
     background-color: rgb(104, 21, 104);
     cursor:none;
+    z-index: 5; 
 }
 
 #knight-button{
     background-color: rgb(41, 51, 59);
     cursor:none;
+    z-index: 5; 
 }
 
 .character_titles {
@@ -150,6 +153,31 @@ canvas {
 .dropdown1, .dropdown2, .dropdown3 {
 	position: relative; 
 	display: inline-block; 
+    z-index: 1;
+}
+
+.dropdown_archer, .dropdown_wizard, .dropdown_knight {
+    display: none;
+	position: absolute; 
+    left: 0;
+	min-width: 100px; 
+	padding: 5px 10px; 
+	margin-top: -2px;
+	z-index: 10;
+    box-shadow: 1px 2px 4px rgba(194, 143, 194, 0.945);
+	border-radius: 8px; 
+}
+
+.dropdown1:hover .dropdown_archer {
+	display: block; 
+}
+
+.dropdown2:hover .dropdown_wizard {
+	display: block;
+}
+
+.dropdown3:hover .dropdown_knight {
+    display: block; 
 }
 
 .menu {
