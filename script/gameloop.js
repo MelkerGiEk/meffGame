@@ -322,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.range = 100;
       this.fireRate = 40 / gameSpeed;
       this.color = "black";
-      this.name = "Archer Tower";
+      this.name = "Knight Tower";
     }
 
     draw() {
