@@ -491,6 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
         startButton.textContent = "Start"; // Ändra texten på knappen
       }
     });
+
     speedButton.addEventListener("click", () => {
       if (isGameRunning === true) {
         if (gameSpeed === 1) {
@@ -498,7 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
           speedButton.textContent = "Speed: 2x";
           // Öka hastigheten för fienderna som redan finns
           enemies.forEach((enemy) => {
-            enemy.speed = 2 * gameSpeed;
+            enemy.speed = enemy.speed * gameSpeed;
           });
           towers.forEach((tower) => {
             tower.fireRate = tower.fireRate / gameSpeed; // Justera tornens skottfrekvens
@@ -508,10 +509,10 @@ document.addEventListener("DOMContentLoaded", () => {
           gameSpeed = 1; // Återställ hastigheten
           speedButton.textContent = "Speed: 1x";
           enemies.forEach((enemy) => {
-            enemy.speed = 2 / gameSpeed;
+            enemy.speed = enemy.speed / 2;
           });
           towers.forEach((tower) => {
-            tower.fireRate = tower.fireRate * gameSpeed; // Justera tornens skottfrekvens
+            tower.fireRate = tower.fireRate * 2; // Justera tornens skottfrekvens
           });
           return gameSpeed;
         }
