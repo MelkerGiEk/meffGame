@@ -121,7 +121,28 @@ document.addEventListener("DOMContentLoaded", () => {
       super(); // Anropa basklassens konstruktor
       this.size = gridSize * 0.85; // Ändra storleken för den lilla fienden
       this.speed = 1.2 * gameSpeed; // Snabbare hastighet för den lilla fienden
-      this.health = 5; // Lägre hälsa för den lilla fienden
+      this.health = 8; // Lägre hälsa för den lilla fienden
+    }
+    move() {
+      if (this.currentPoint < path.length - 1) {
+        let nextPoint = path[this.currentPoint + 1];
+        let dx = nextPoint.x - this.x;
+        let dy = nextPoint.y - this.y;
+        let distance = Math.hypot(dx, dy);
+
+        if (distance < this.speed) {
+          this.currentPoint++;
+        } else {
+          this.x += (dx / distance) * this.speed;
+          this.y += (dy / distance) * this.speed;
+        }
+      } else {
+        lives -= 3;
+        money += 10;
+        enemies.splice(enemies.indexOf(this), 1);
+        updateMoneyCounter();
+        updateLivesCounter();
+      }
     }
 
     draw() {
@@ -142,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.target = target;
       this.speed = 6 * gameSpeed;
     }
+
     move() {
       if (this.target.isDead) {
         // Om målet redan dödats av annan projektil
@@ -320,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
     constructor(x, y) {
       super(x, y);
       this.range = 100;
-      this.fireRate = 40 / gameSpeed;
+      this.fireRate = 10 / gameSpeed;
       this.color = "black";
       this.name = "Knight Tower";
     }
@@ -384,6 +406,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     enemies.forEach((enemy) => {
       enemy.move();
+      if (lives <= 0) {
+        lives = 0;
+        updateLivesCounter(); // Update the lives counter
+      }
       enemy.draw();
     });
 
@@ -474,12 +500,18 @@ document.addEventListener("DOMContentLoaded", () => {
           enemies.forEach((enemy) => {
             enemy.speed = 2 * gameSpeed;
           });
+          towers.forEach((tower) => {
+            tower.fireRate = tower.fireRate / gameSpeed; // Justera tornens skottfrekvens
+          });
           return gameSpeed;
         } else if (gameSpeed === 2) {
           gameSpeed = 1; // Återställ hastigheten
           speedButton.textContent = "Speed: 1x";
           enemies.forEach((enemy) => {
             enemy.speed = 2 / gameSpeed;
+          });
+          towers.forEach((tower) => {
+            tower.fireRate = tower.fireRate * gameSpeed; // Justera tornens skottfrekvens
           });
           return gameSpeed;
         }
