@@ -379,8 +379,16 @@ export class WizardTower extends Tower {
 
 export class KnightTower extends Tower {
   static cost = 75;
-  constructor(x, y, gridSize, gameSpeed, enemies, projectiles) {
-    super(x, y, gridSize, gameSpeed, enemies, projectiles); // Anropa basklassens konstruktor
+  constructor(
+    x,
+    y,
+    gridSize,
+    gameSpeed,
+    enemies,
+    projectiles,
+    updateMoneyCounter
+  ) {
+    super(x, y, gridSize, gameSpeed, enemies, projectiles, updateMoneyCounter); // Anropa basklassens konstruktor
     this.range = 100;
     this.fireRate = 10 / gameSpeed;
     this.color = "black";
@@ -388,6 +396,7 @@ export class KnightTower extends Tower {
     this.enemies = enemies; // Store the enemies array
     this.projectiles = projectiles; // Store the projectiles array
     this.gameSpeed = gameSpeed;
+    this.updateMoneyCounter = updateMoneyCounter; // Funktion för att uppdatera pengarna
   }
 
   draw(ctx) {
