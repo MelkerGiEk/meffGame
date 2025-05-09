@@ -20,6 +20,8 @@ export class Enemy {
     this.health = 3;
     this.isDead = false;
     this.enemies = enemies; // Array för fiender
+    this.worth = 5; // Belöning för att döda fienden
+    this.damage = 1; // Skada som fienden orsakar
   }
 
   move() {
@@ -39,8 +41,14 @@ export class Enemy {
   isAtEnd() {
     if (this.currentPoint >= this.path.length - 1) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
-      this.updateMoneyCounter(5); // Belöning för att döda fienden
-      this.updateLivesCounter(1); // Ta bort liv när fienden når slutet
+      this.updateLivesCounter(this.damage); // Ta bort liv när fienden når slutet
+    }
+  }
+
+  checkIfDead() {
+    if (this.isDead === true) {
+      this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
+      this.updateMoneyCounter(this.worth); // Belöning för att döda fienden
     }
   }
 
@@ -62,7 +70,9 @@ export class slowEnemy extends Enemy {
     gameSpeed,
     updateLivesCounter,
     updateMoneyCounter,
-    enemies
+    enemies,
+    worth,
+    damage
   ) {
     super(
       path,
@@ -70,7 +80,9 @@ export class slowEnemy extends Enemy {
       gameSpeed,
       updateLivesCounter,
       updateMoneyCounter,
-      enemies
+      enemies,
+      worth,
+      damage
     ); // Anropa basklassens konstruktor
     this.size = gridSize * 0.85; // Ändra storleken för den lilla fienden
     this.speed = 1.25 * gameSpeed; // Snabbare hastighet för den lilla fienden
@@ -78,7 +90,10 @@ export class slowEnemy extends Enemy {
     this.enemies = enemies; // Array för fiender
     this.updateLivesCounter = updateLivesCounter; // Funktion för att uppdatera livräknaren
     this.updateMoneyCounter = updateMoneyCounter; // Funktion för att uppdatera pengarna
+    this.worth = 10; // Belöning för att döda fienden
+    this.damage = 3; // Skada som fienden orsakar
   }
+
   move() {
     let nextPoint = this.path[this.currentPoint + 1];
     let dx = nextPoint.x - this.x;
@@ -96,8 +111,14 @@ export class slowEnemy extends Enemy {
   isAtEnd() {
     if (this.currentPoint >= this.path.length - 1) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
-      this.updateMoneyCounter(10); // Belöning för att döda fienden
-      this.updateLivesCounter(3); // Ta bort liv när fienden når slutet
+      this.updateLivesCounter(this.damage); // Ta bort liv när fienden når slutet
+    }
+  }
+
+  checkIfDead() {
+    if (this.isDead === true) {
+      this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
+      this.updateMoneyCounter(this.worth); // Belöning för att döda fienden
     }
   }
 
@@ -135,15 +156,8 @@ export class Projectile {
     let dx = this.target.x - this.x;
     let dy = this.target.y - this.y;
     let distance = Math.hypot(dx, dy);
-
-    if (this.target.isDead) {
-      // Om målet redan dödats av annan projektil
-      this.projectiles.splice(this.projectiles.indexOf(this), 1);
-      return;
-    } else {
-      this.x += (dx / distance) * this.speed;
-      this.y += (dy / distance) * this.speed;
-    }
+    this.x += (dx / distance) * this.speed;
+    this.y += (dy / distance) * this.speed;
   }
 
   checkCollision() {
@@ -156,8 +170,6 @@ export class Projectile {
       this.target.health--;
       if (this.target.health <= 0) {
         this.target.isDead = true;
-        this.enemies.splice(this.enemies.indexOf(this.target), 1);
-        this.updateMoneyCounter(10);
       }
     }
   }
@@ -191,27 +203,24 @@ export class PiercingProjectile extends Projectile {
     this.updateMoneyCounter = updateMoneyCounter;
   }
   move() {
-    if (this.target.isDead) {
-      this.projectiles.splice(this.projectiles.indexOf(this), 1);
-      return;
-    }
-
     let dx = this.target.x - this.x;
     let dy = this.target.y - this.y;
-    let distance = Math.sqrt(dx * dx + dy * dy);
+    let distance = Math.hypot(dx, dy);
+    this.x += (dx / distance) * this.speed;
+    this.y += (dy / distance) * this.speed;
+  }
+
+  checkCollision() {
+    let dx = this.target.x - this.x;
+    let dy = this.target.y - this.y;
+    let distance = Math.hypot(dx, dy);
 
     if (distance < this.speed + this.target.size / 2) {
-      let index = this.projectiles.indexOf(this);
-      this.projectiles.splice(index, 1);
+      this.projectiles.splice(this.projectiles.indexOf(this), 1);
       this.target.health--;
       if (this.target.health <= 0) {
         this.target.isDead = true;
-        this.enemies.splice(this.enemies.indexOf(this.target), 1);
-        this.updateMoneyCounter(10);
       }
-    } else {
-      this.x += (dx / distance) * this.speed;
-      this.y += (dy / distance) * this.speed;
     }
   }
   draw(ctx) {

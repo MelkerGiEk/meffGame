@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
   cursor.style.width = `150px`;
   cursor.style.height = `150px`;
 
+  const cursor2 = document.getElementById("custom-cursor2");
+  cursor.style.width = `150px`;
+  cursor.style.height = `150px`;
+
   document.addEventListener("mousemove", (e) => {
     cursor.style.left = `${e.clientX + 5}px`;
     cursor.style.top = `${e.clientY + 5}px`;
@@ -135,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       enemy.move();
       enemy.draw(ctx);
       enemy.isAtEnd();
+      enemy.checkIfDead();
     });
 
     towers.forEach((tower) => {

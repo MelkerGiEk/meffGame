@@ -221,8 +221,18 @@ canvas {
     cursor: none;
 }
 
-#start-button:hover {
+#start-button:hover, #speed-button:hover {
     cursor: none;
+    transform: scale(1.05);
+    transition: all ease-in-out 0.1s;
+    background-color: #5ad15e;
+    ;
+}
+
+#start-button:active, #speed-button:active {
+    background-color: #405c33;
+    transform: scale(0.95);
+    transition: all ease-in-out 0.05s;
 }
 
 #speed-button {
@@ -240,7 +250,19 @@ canvas {
     cursor: none;
 }
 
-#speed-button:hover {
+
+#wavecounter {
+    background-color: #798a8b; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 3px; 
     cursor: none;
 }
 
@@ -273,3 +295,11 @@ img {
     z-index: 9999; 
 }
 
+#custom-cursor2 {
+    position: fixed;
+    height: 100px; 
+    width: 100px;
+    pointer-events: none; 
+    transform:translate(-50%, -50%);
+    z-index: 9999; 
+}
