@@ -1,9 +1,6 @@
 import {
   Enemy,
   slowEnemy,
-  Projectile,
-  PiercingProjectile,
-  Tower,
   ArcherTower,
   WizardTower,
   KnightTower,
@@ -82,304 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
     y: row * gridSize + gridSize / 2,
   }));
 
-  // class Enemy {
-  //   constructor() {
-  //     this.currentPoint = 0;
-  //     this.x = path[0].x;
-  //     this.y = path[0].y;
-  //     this.size = gridSize * 0.75;
-  //     this.speed = 2 * gameSpeed; // Hastighet för fienden som skapas
-  //     this.health = 3;
-  //     this.isDead = false;
-  //   }
-
-  //   move() {
-  //     if (this.currentPoint < path.length - 1) {
-  //       let nextPoint = path[this.currentPoint + 1];
-  //       let dx = nextPoint.x - this.x;
-  //       let dy = nextPoint.y - this.y;
-  //       let distance = Math.hypot(dx, dy);
-
-  //       if (distance < this.speed) {
-  //         this.currentPoint++;
-  //       } else {
-  //         this.x += (dx / distance) * this.speed;
-  //         this.y += (dy / distance) * this.speed;
-  //       }
-  //     } else {
-  //       lives -= 1;
-  //       money += 10;
-  //       enemies.splice(enemies.indexOf(this), 1);
-  //       updateMoneyCounter();
-  //       updateLivesCounter();
-  //     }
-  //   }
-
-  //   draw() {
-  //     ctx.fillStyle = "green";
-  //     ctx.fillRect(
-  //       this.x - this.size / 2,
-  //       this.y - this.size / 2,
-  //       this.size,
-  //       this.size
-  //     );
-  //   }
-  // }
-
-  // class slowEnemy extends Enemy {
-  //   constructor() {
-  //     super(); // Anropa basklassens konstruktor
-  //     this.size = gridSize * 0.85; // Ändra storleken för den lilla fienden
-  //     this.speed = 1.2 * gameSpeed; // Snabbare hastighet för den lilla fienden
-  //     this.health = 8; // Lägre hälsa för den lilla fienden
-  //   }
-  //   move() {
-  //     if (this.currentPoint < path.length - 1) {
-  //       let nextPoint = path[this.currentPoint + 1];
-  //       let dx = nextPoint.x - this.x;
-  //       let dy = nextPoint.y - this.y;
-  //       let distance = Math.hypot(dx, dy);
-
-  //       if (distance < this.speed) {
-  //         this.currentPoint++;
-  //       } else {
-  //         this.x += (dx / distance) * this.speed;
-  //         this.y += (dy / distance) * this.speed;
-  //       }
-  //     } else {
-  //       lives -= 3;
-  //       money += 10;
-  //       enemies.splice(enemies.indexOf(this), 1);
-  //       updateMoneyCounter();
-  //       updateLivesCounter();
-  //     }
-  //   }
-
-  //   draw() {
-  //     ctx.fillStyle = "darkgreen"; // Ändra färgen för den lilla fienden
-  //     ctx.fillRect(
-  //       this.x - this.size / 2,
-  //       this.y - this.size / 2,
-  //       this.size,
-  //       this.size
-  //     );
-  //   }
-  // }
-
-  // class Projectile {
-  //   constructor(x, y, target) {
-  //     this.x = x;
-  //     this.y = y;
-  //     this.target = target;
-  //     this.speed = 6 * gameSpeed;
-  //   }
-
-  //   move() {
-  //     if (this.target.isDead) {
-  //       // Om målet redan dödats av annan projektil
-  //       projectiles.splice(projectiles.indexOf(this), 1);
-  //       return;
-  //     }
-
-  //     let dx = this.target.x - this.x;
-  //     let dy = this.target.y - this.y;
-  //     let distance = Math.hypot(dx, dy);
-
-  //     if (distance < this.speed + this.target.size / 2) {
-  //       projectiles.splice(projectiles.indexOf(this), 1);
-  //       this.target.health--;
-  //       if (this.target.health <= 0) {
-  //         this.target.isDead = true;
-  //         enemies.splice(enemies.indexOf(this.target), 1);
-  //         money += 10;
-  //         updateMoneyCounter();
-  //       }
-  //     } else {
-  //       this.x += (dx / distance) * this.speed;
-  //       this.y += (dy / distance) * this.speed;
-  //     }
-  //   }
-
-  //   draw() {
-  //     ctx.fillStyle = "darkgrey";
-  //     ctx.beginPath();
-  //     ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
-  //     ctx.fill();
-  //   }
-  // }
-
-  // // Projektilklass
-  // class PiercingProjectile extends Projectile {
-  //   constructor(x, y, target) {
-  //     super(x, y, target);
-  //     this.x = x;
-  //     this.y = y;
-  //     this.target = target;
-  //     this.speed = 5 * gameSpeed; // Hastighet för projektilen
-  //   }
-  //   move() {
-  //     if (this.target.isDead) {
-  //       projectiles.splice(projectiles.indexOf(this), 1);
-  //       return;
-  //     }
-
-  //     let dx = this.target.x - this.x;
-  //     let dy = this.target.y - this.y;
-  //     let distance = Math.sqrt(dx * dx + dy * dy);
-
-  //     if (distance < this.speed + this.target.size / 2) {
-  //       let index = projectiles.indexOf(this);
-  //       projectiles.splice(index, 1);
-  //       this.target.health--;
-  //       if (this.target.health <= 0) {
-  //         this.target.isDead = true;
-  //         enemies.splice(enemies.indexOf(this.target), 1);
-  //         money += 10;
-  //         updateMoneyCounter();
-  //       }
-  //     } else {
-  //       this.x += (dx / distance) * this.speed;
-  //       this.y += (dy / distance) * this.speed;
-  //     }
-  //   }
-  //   draw() {
-  //     ctx.fillStyle = "red";
-  //     ctx.beginPath();
-  //     ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
-  //     ctx.fill();
-  //   }
-  // }
-
-  // class Tower {
-  //   constructor(x, y) {
-  //     this.x = x + gridSize / 2;
-  //     this.y = y + gridSize / 2;
-  //     this.size = gridSize * 0.5;
-  //     this.range = 200;
-  //     this.fireRate = 50 / gameSpeed;
-  //     this.lastShot = 0;
-  //   }
-  //   draw() {
-  //     ctx.fillStyle = "blue";
-  //     ctx.fillRect(
-  //       this.x - this.size / 2,
-  //       this.y - this.size / 2,
-  //       this.size,
-  //       this.size
-  //     );
-  //   }
-  //   shoot() {
-  //     if (frame - this.lastShot > this.fireRate) {
-  //       let target = enemies.find(
-  //         (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
-  //       );
-  //       if (target) {
-  //         projectiles.push(new Projectile(this.x, this.y, target));
-  //         this.lastShot = frame;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // class ArcherTower extends Tower {
-  //   static cost = 50;
-  //   constructor(x, y) {
-  //     super(x, y); // Anropa basklassens konstruktor
-  //     this.range = 200;
-  //     this.fireRate = 30 / gameSpeed; // Snabbare skott
-  //     this.color = "red"; // Specifik färg för Archer Tower
-  //     this.name = "Archer Tower"; // Namn på tornet
-  //   }
-
-  //   draw() {
-  //     ctx.fillStyle = this.color;
-  //     ctx.fillRect(
-  //       this.x - this.size / 2,
-  //       this.y - this.size / 2,
-  //       this.size,
-  //       this.size
-  //     );
-  //   }
-
-  //   shoot() {
-  //     if (frame - this.lastShot > this.fireRate) {
-  //       let target = enemies.find(
-  //         (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
-  //       );
-  //       if (target) {
-  //         projectiles.push(new Projectile(this.x, this.y, target));
-  //         this.lastShot = frame;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // class WizardTower extends Tower {
-  //   static cost = 100;
-  //   constructor(x, y) {
-  //     super(x, y); // Anropa basklassens konstruktor
-  //     this.range = 120;
-  //     this.fireRate = 18 / gameSpeed; // Långsammare skott
-  //     this.color = "purple"; // Specifik färg för Wizard Tower
-  //     this.name = "Wizard Tower"; // Namn på tornet
-  //   }
-
-  //   draw() {
-  //     ctx.fillStyle = this.color;
-  //     ctx.fillRect(
-  //       this.x - this.size / 2,
-  //       this.y - this.size / 2,
-  //       this.size,
-  //       this.size
-  //     );
-  //   }
-
-  //   shoot() {
-  //     if (frame - this.lastShot > this.fireRate) {
-  //       let target = enemies.find(
-  //         (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
-  //       );
-  //       if (target) {
-  //         projectiles.push(new PiercingProjectile(this.x, this.y, target));
-  //         this.lastShot = frame;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // class KnightTower extends Tower {
-  //   static cost = 75;
-  //   constructor(x, y) {
-  //     super(x, y);
-  //     this.range = 100;
-  //     this.fireRate = 10 / gameSpeed;
-  //     this.color = "black";
-  //     this.name = "Knight Tower";
-  //   }
-
-  //   draw() {
-  //     ctx.fillStyle = this.color;
-  //     ctx.fillRect(
-  //       this.x - this.size / 2,
-  //       this.y - this.size / 2,
-  //       this.size,
-  //       this.size
-  //     );
-  //   }
-
-  //   shoot() {
-  //     if (frame - this.lastShot > this.fireRate) {
-  //       let target = enemies.find(
-  //         (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
-  //       );
-  //       if (target) {
-  //         projectiles.push(new Projectile(this.x, this.y, target));
-  //         this.lastShot = frame;
-  //       }
-  //     }
-  //   }
-  // }
-
   let isGameRunning = false; // Flagga för att kontrollera spelets status
   // Starta spelet när sidan laddas
 
@@ -409,8 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
           path,
           gridSize,
           gameSpeed,
-          updateMoneyCounter,
           updateLivesCounter,
+          updateMoneyCounter,
           enemies
         )
       ); // Skapa en ny fiende
@@ -424,8 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
           path,
           gridSize,
           gameSpeed,
-          updateMoneyCounter,
           updateLivesCounter,
+          updateMoneyCounter,
           enemies
         )
       );
@@ -435,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     enemies.forEach((enemy) => {
       enemy.move();
       enemy.draw(ctx);
+      enemy.isAtEnd();
     });
 
     towers.forEach((tower) => {
@@ -443,15 +143,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     projectiles.forEach((projectile) => {
-      projectile.move(money);
+      projectile.move();
       projectile.draw(ctx);
+      projectile.checkCollision(enemies, projectiles, updateMoneyCounter);
     });
 
     frame++;
     requestAnimationFrame(gameLoop);
   }
 
+  function updateLivesCounter(amount) {
+    console.log("amountoflives:", amount);
+    console.trace();
+    console.log("Lives before update:", lives);
+    if (isNaN(amount) === false) {
+      lives -= amount;
+    } // Subtrahera liv om beloppet är negativt
+    if (lives <= 0) {
+      lives = 0;
+    }
+    livesCounter.textContent = `Lives: ${lives}`;
+  }
+
   function updateMoneyCounter(amount) {
+    console.log("amountofmoney:", amount);
     if (amount < 0) {
       money = -amount; // Subtrahera pengar om beloppet är negativt
       if (money < 0) {
@@ -464,15 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     moneyCounter.textContent = `Money: $${money}`;
-  }
-  function updateLivesCounter(amount) {
-    if (isNaN(amount) === false) {
-      lives = lives - amount;
-    } // Subtrahera liv om beloppet är negativt
-    if (lives <= 0) {
-      lives = 0;
-    }
-    livesCounter.textContent = `Lives: ${lives}`;
   }
 
   // Update money counter on page load
@@ -502,8 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateMoneyCounter
           )
         );
-        money -= ArcherTower.cost;
-        updateMoneyCounter(); // Update the money counter
+        updateMoneyCounter(-ArcherTower.cost); // Update the money counter
       } else if (
         selectedTowerType === "Wizard Tower" &&
         money >= WizardTower.cost
@@ -519,8 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateMoneyCounter
           )
         );
-        money -= WizardTower.cost;
-        updateMoneyCounter(); // Update the money counter
+        updateMoneyCounter(-WizardTower.cost); // Update the money counter
       } else if (
         selectedTowerType === "Knight Tower" &&
         money >= KnightTower.cost
@@ -536,8 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateMoneyCounter
           )
         );
-        money -= KnightTower.cost;
-        updateMoneyCounter(); // Update the money counter
+        updateMoneyCounter(-KnightTower.cost); // Update the money counter
       }
     }
   });

@@ -23,22 +23,24 @@ export class Enemy {
   }
 
   move() {
-    if (this.currentPoint < this.path.length - 1) {
-      let nextPoint = this.path[this.currentPoint + 1];
-      let dx = nextPoint.x - this.x;
-      let dy = nextPoint.y - this.y;
-      let distance = Math.hypot(dx, dy);
+    let nextPoint = this.path[this.currentPoint + 1];
+    let dx = nextPoint.x - this.x;
+    let dy = nextPoint.y - this.y;
+    let distance = Math.hypot(dx, dy);
 
-      if (distance < this.speed) {
-        this.currentPoint++;
-      } else {
-        this.x += (dx / distance) * this.speed;
-        this.y += (dy / distance) * this.speed;
-      }
+    if (distance < this.speed) {
+      this.currentPoint++;
     } else {
-      this.enemies.splice(this.enemies.indexOf(this), 1);
-      this.updateMoneyCounter(5);
-      this.updateLivesCounter(1);
+      this.x += (dx / distance) * this.speed;
+      this.y += (dy / distance) * this.speed;
+    }
+  }
+
+  isAtEnd() {
+    if (this.currentPoint >= this.path.length - 1) {
+      this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
+      this.updateMoneyCounter(5); // Belöning för att döda fienden
+      this.updateLivesCounter(1); // Ta bort liv när fienden når slutet
     }
   }
 
@@ -58,42 +60,44 @@ export class slowEnemy extends Enemy {
     path,
     gridSize,
     gameSpeed,
-    updateMoneyCounter,
     updateLivesCounter,
+    updateMoneyCounter,
     enemies
   ) {
     super(
       path,
       gridSize,
       gameSpeed,
-      updateMoneyCounter,
       updateLivesCounter,
+      updateMoneyCounter,
       enemies
     ); // Anropa basklassens konstruktor
     this.size = gridSize * 0.85; // Ändra storleken för den lilla fienden
-    this.speed = 1.2 * gameSpeed; // Snabbare hastighet för den lilla fienden
+    this.speed = 1.25 * gameSpeed; // Snabbare hastighet för den lilla fienden
     this.health = 8; // Lägre hälsa för den lilla fienden
     this.enemies = enemies; // Array för fiender
-    this.updateMoneyCounter = updateMoneyCounter; // Funktion för att uppdatera pengarna
     this.updateLivesCounter = updateLivesCounter; // Funktion för att uppdatera livräknaren
+    this.updateMoneyCounter = updateMoneyCounter; // Funktion för att uppdatera pengarna
   }
   move() {
-    if (this.currentPoint < this.path.length - 1) {
-      let nextPoint = this.path[this.currentPoint + 1];
-      let dx = nextPoint.x - this.x;
-      let dy = nextPoint.y - this.y;
-      let distance = Math.hypot(dx, dy);
+    let nextPoint = this.path[this.currentPoint + 1];
+    let dx = nextPoint.x - this.x;
+    let dy = nextPoint.y - this.y;
+    let distance = Math.hypot(dx, dy);
 
-      if (distance < this.speed) {
-        this.currentPoint++;
-      } else {
-        this.x += (dx / distance) * this.speed;
-        this.y += (dy / distance) * this.speed;
-      }
+    if (distance < this.speed) {
+      this.currentPoint++;
     } else {
-      this.enemies.splice(this.enemies.indexOf(this), 1);
-      this.updateMoneyCounter(10);
-      this.updateLivesCounter(3);
+      this.x += (dx / distance) * this.speed;
+      this.y += (dy / distance) * this.speed;
+    }
+  }
+
+  isAtEnd() {
+    if (this.currentPoint >= this.path.length - 1) {
+      this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
+      this.updateMoneyCounter(10); // Belöning för att döda fienden
+      this.updateLivesCounter(3); // Ta bort liv när fienden når slutet
     }
   }
 
@@ -128,12 +132,21 @@ export class Projectile {
   }
 
   move() {
+    let dx = this.target.x - this.x;
+    let dy = this.target.y - this.y;
+    let distance = Math.hypot(dx, dy);
+
     if (this.target.isDead) {
       // Om målet redan dödats av annan projektil
       this.projectiles.splice(this.projectiles.indexOf(this), 1);
       return;
+    } else {
+      this.x += (dx / distance) * this.speed;
+      this.y += (dy / distance) * this.speed;
     }
+  }
 
+  checkCollision() {
     let dx = this.target.x - this.x;
     let dy = this.target.y - this.y;
     let distance = Math.hypot(dx, dy);
@@ -146,9 +159,6 @@ export class Projectile {
         this.enemies.splice(this.enemies.indexOf(this.target), 1);
         this.updateMoneyCounter(10);
       }
-    } else {
-      this.x += (dx / distance) * this.speed;
-      this.y += (dy / distance) * this.speed;
     }
   }
 
