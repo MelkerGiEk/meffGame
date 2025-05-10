@@ -215,10 +215,11 @@ canvas {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 2px 0;
     cursor: pointer;
     border-radius: 3px; 
     cursor: none;
+    margin-left: 5px;
 }
 
 #start-button:hover, #speed-button:hover {
@@ -226,7 +227,6 @@ canvas {
     transform: scale(1.05);
     transition: all ease-in-out 0.1s;
     background-color: #5ad15e;
-    ;
 }
 
 #start-button:active, #speed-button:active {
@@ -244,7 +244,8 @@ canvas {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 2px 0;
+    margin-left: 2px;
     cursor: pointer;
     border-radius: 3px; 
     cursor: none;
@@ -286,20 +287,14 @@ img {
     opacity: 0.8;
 }
 
-#custom-cursor {
+#custom-cursor{
     position: fixed;
     height: 100px; 
     width: 100px;
     pointer-events: none; 
     transform:translate(-50%, -50%);
     z-index: 9999; 
-}
-
-#custom-cursor2 {
-    position: fixed;
-    height: 100px; 
-    width: 100px;
-    pointer-events: none; 
-    transform:translate(-50%, -50%);
-    z-index: 9999; 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    scale: 1.5;
 }

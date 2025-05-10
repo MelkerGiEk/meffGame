@@ -5,6 +5,7 @@ import {
   WizardTower,
   KnightTower,
 } from "./classes.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("gameCanvas");
   // @type {canvasRenderingContext2D}
@@ -19,13 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
   cursor.style.width = `150px`;
   cursor.style.height = `150px`;
 
-  const cursor2 = document.getElementById("custom-cursor2");
-  cursor.style.width = `150px`;
-  cursor.style.height = `150px`;
-
   document.addEventListener("mousemove", (e) => {
     cursor.style.left = `${e.clientX + 5}px`;
-    cursor.style.top = `${e.clientY + 5}px`;
+    cursor.style.top = `${e.clientY + 6}px`;
   });
 
   const pathCoordinates = [
@@ -259,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Wizard Button:", wizardButton);
     console.log("Archer Button:", archerButton);
     console.log("Knight Button:", knightButton);
+    // Funktion för att dölja muspekaren
 
     startButton.addEventListener("click", () => {
       if (isGameRunning === false) {
