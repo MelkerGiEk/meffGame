@@ -5,7 +5,8 @@ export class Enemy {
     gameSpeed,
     updateLivesCounter,
     updateMoneyCounter,
-    enemies
+    enemies,
+    killCountRef
   ) {
     this.path = path; // Path är en array av punkter som fienden ska följa
     this.gridSize = gridSize; // Rutstorlek för spelet
@@ -22,6 +23,7 @@ export class Enemy {
     this.enemies = enemies; // Array för fiender
     this.worth = 5; // Belöning för att döda fienden
     this.damage = 1; // Skada som fienden orsakar
+    this.killCountRef = killCountRef; // Referens till kill count
   }
 
   move() {
@@ -42,6 +44,8 @@ export class Enemy {
     if (this.currentPoint >= this.path.length - 1) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateLivesCounter(this.damage); // Ta bort liv när fienden når slutet
+      this.killCountRef.value++;
+      console.log("Kill count: " + this.killCountRef.value);
     }
   }
 
@@ -49,6 +53,8 @@ export class Enemy {
     if (this.isDead === true) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateMoneyCounter(this.worth); // Belöning för att döda fienden
+      this.killCountRef.value++;
+      console.log("Kill count: " + this.killCountRef.value);
     }
   }
 
@@ -72,7 +78,8 @@ export class slowEnemy extends Enemy {
     updateMoneyCounter,
     enemies,
     worth,
-    damage
+    damage,
+    killCountRef
   ) {
     super(
       path,
@@ -82,7 +89,8 @@ export class slowEnemy extends Enemy {
       updateMoneyCounter,
       enemies,
       worth,
-      damage
+      damage,
+      killCountRef
     ); // Anropa basklassens konstruktor
     this.size = gridSize * 0.85; // Ändra storleken för den lilla fienden
     this.speed = 1.25 * gameSpeed; // Snabbare hastighet för den lilla fienden
@@ -112,6 +120,8 @@ export class slowEnemy extends Enemy {
     if (this.currentPoint >= this.path.length - 1) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateLivesCounter(this.damage); // Ta bort liv när fienden når slutet
+      this.killCountRef.value++;
+      console.log("Kill count: " + this.killCountRef.value);
     }
   }
 
@@ -119,6 +129,8 @@ export class slowEnemy extends Enemy {
     if (this.isDead === true) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateMoneyCounter(this.worth); // Belöning för att döda fienden
+      this.killCountRef.value++;
+      console.log("Kill count: " + this.killCountRef.value);
     }
   }
 

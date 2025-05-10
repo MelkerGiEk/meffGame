@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let frame = 0;
   let money = 150;
   let lives = 10;
+  let killCount = { value: 0 };
   let gameSpeed = 1; // Default game speed
   let selectedTowerType = "none"; // Exempel: ändra detta baserat på användarens val
 
@@ -111,7 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
           gameSpeed,
           updateLivesCounter,
           updateMoneyCounter,
-          enemies
+          enemies,
+          killCount
         )
       ); // Skapa en ny fiende
       enemySpawnTimer = enemySpawnInterval; // Återställ spawn-timern
@@ -126,7 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
           gameSpeed,
           updateLivesCounter,
           updateMoneyCounter,
-          enemies
+          enemies,
+          killCount
         )
       );
       slowEnemySpawnTimer = slowEnemySpawnInterval;
