@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let killCount = { value: 0 };
   let gameSpeed = 1; // Default game speed
   let selectedTowerType = "none"; // Exempel: ändra detta baserat på användarens val
+  let isRoundActive = false; // Flagga för att kontrollera om rundan är aktiv
+  let currentWave = 1; // Håller reda på nuvarande våg
 
   const path = pathCoordinates.map(([col, row]) => ({
     x: col * gridSize + gridSize / 2,
@@ -104,35 +106,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Hantera fiendespawn
     enemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
-    if (enemySpawnTimer <= 0) {
-      enemies.push(
-        new Enemy(
-          path,
-          gridSize,
-          gameSpeed,
-          updateLivesCounter,
-          updateMoneyCounter,
-          enemies,
-          killCount
-        )
-      ); // Skapa en ny fiende
-      enemySpawnTimer = enemySpawnInterval; // Återställ spawn-timern
-    }
+    if (isRoundActive) {
+      if (enemySpawnTimer <= 0) {
+        enemies.push(
+          new Enemy(
+            path,
+            gridSize,
+            gameSpeed,
+            updateLivesCounter,
+            updateMoneyCounter,
+            enemies,
+            killCount
+          )
+        ); // Skapa en ny fiende
+        enemySpawnTimer = enemySpawnInterval; // Återställ spawn-timern
+      }
 
-    slowEnemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
-    if ((slowEnemySpawnTimer = 100 && frame % 300 === 0)) {
-      enemies.push(
-        new slowEnemy(
-          path,
-          gridSize,
-          gameSpeed,
-          updateLivesCounter,
-          updateMoneyCounter,
-          enemies,
-          killCount
-        )
-      );
-      slowEnemySpawnTimer = slowEnemySpawnInterval;
+      slowEnemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
+      if ((slowEnemySpawnTimer = 100 && frame % 300 === 0)) {
+        enemies.push(
+          new slowEnemy(
+            path,
+            gridSize,
+            gameSpeed,
+            updateLivesCounter,
+            updateMoneyCounter,
+            enemies,
+            killCount
+          )
+        );
+        slowEnemySpawnTimer = slowEnemySpawnInterval;
+      }
+      if (enemies.length === 0) {
+        isRoundActive = false; // Avsluta rundan
+        console.log(`Wave ${currentWave} completed!`);
+        alert(`Wave ${currentWave} completed!`);
+      }
+    } else if (!isRoundActive && isGameRunning) {
+      startButton.textContent = "Continue"; // Ändra texten på knappen
     }
 
     enemies.forEach((enemy) => {
@@ -173,12 +184,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateMoneyCounter(amount) {
     console.log("amountofmoney:", amount);
     if (amount < 0) {
-      money = -amount; // Subtrahera pengar om beloppet är negativt
-      if (money < 0) {
+      money = money + amount; // Subtrahera pengar om beloppet är negativt
+      if (money <= 0) {
         money = 0; // Se till att pengar inte blir negativa
       }
     } else if (amount > 0) {
-      money += amount; // Lägg till pengar om beloppet är positivt
+      money = money + amount; // Lägg till pengar om beloppet är positivt
       if (money < 0) {
         money = 0; // Se till att pengar inte blir negativa
       }
@@ -262,8 +273,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Funktion för att dölja muspekaren
 
     startButton.addEventListener("click", () => {
-      if (isGameRunning === false) {
+      if (isGameRunning === true && isRoundActive === false) {
+        isRoundActive = true; // Starta rundan
+        startButton.textContent = "Pause"; // Ändra texten på knappen
+      } else if (isGameRunning === false && isRoundActive === false) {
         isGameRunning = true; // Starta spelet
+        isRoundActive = true; // Starta spelet
         gameLoop();
         startButton.textContent = "Pause"; // Ändra texten på knappen
       } else if (isGameRunning === true) {

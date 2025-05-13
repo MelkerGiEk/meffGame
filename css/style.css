@@ -50,6 +50,7 @@ canvas {
 }
 
 .money-counter {
+    margin-top: 10px; 
     font-size: 20px;
     font-weight: bold;
     color: #faf8d6;
@@ -68,7 +69,6 @@ canvas {
     z-index: 5;
     display: flex;
     flex: column;
-    
 }
 
 #archer-button, #wizard-button, #knight-button {
@@ -221,6 +221,11 @@ canvas {
     margin-left: 5px;
 }
 
+#start-button, #speed-button {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
 #start-button:hover, #speed-button:hover {
     cursor: none;
     transform: scale(1.05);
@@ -243,8 +248,6 @@ canvas {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 5px 2px 10px 2px;
-    margin-left: 2px;
     border-radius: 3px; 
     cursor: none;
 }
@@ -253,14 +256,15 @@ canvas {
     background-image: url(../assets/UI/Ribbons/Ribbon_Red_3Slides.png);
     /* background-color: #798a8b;  */
     min-width: 22%;
-    min-height: 45%; 
+    min-height: 46%; 
     color: white;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 18px;
-    margin: 5px 0px 10px 2px;
+    margin-left: 50px;
+    margin-bottom: 5px;
     border-radius: 3px; 
     cursor: none;
 }
