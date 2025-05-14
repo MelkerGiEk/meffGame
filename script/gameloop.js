@@ -189,7 +189,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateLivesCounter(amount) {
     console.log("amountoflives:", amount);
     console.trace();
-    console.log("Lives before update:", lives);
     if (isNaN(amount) === false) {
       lives -= amount;
     } // Subtrahera liv om beloppet är negativt
@@ -200,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateMoneyCounter(amount) {
-    console.log("amountofmoney:", amount);
     if (amount < 0) {
       money = money + amount; // Subtrahera pengar om beloppet är negativt
       if (money <= 0) {
@@ -243,15 +241,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Update lives counter on page load
   updateLivesCounter();
 
-  //Tar hand om torn när man klickar(placerar torn. Detta ska vi fixa senare.)
+  //Tar hand om torn när man klickar på canvasen
   canvas.addEventListener("click", (event) => {
     const rect = canvas.getBoundingClientRect(); // Hämtar canvasens position
-    const x = Math.floor((event.clientX - rect.left) / gridSize) * gridSize;
-    const y = Math.floor((event.clientY - rect.top) / gridSize) * gridSize;
-    const isOccupied = occupiedCells.some((pos) => pos.x === x && pos.y === y);
+    const x = Math.floor((event.clientX - rect.left) / gridSize) * gridSize; // Beräknar x-positionen
+    const y = Math.floor((event.clientY - rect.top) / gridSize) * gridSize; // Beräknar y-positionen
+    const isOccupied = occupiedCells.some((pos) => pos.x === x && pos.y === y); // Kontrollerar om "cellen" är upptagen
     const isPath = pathCoordinates.some(
       ([px, py]) => px * gridSize === x && py * gridSize === y
-    ); // Kontrollerar om platsen är en del av vägen
+    ); // Kontrollerar om platsen är en del av vägen (alltså där man inte får sätta torn)
     if (!isPath && !isOccupied) {
       // Välj torn baserat på användarens val
       if (selectedTowerType === "Archer Tower" && money >= ArcherTower.cost) {
@@ -266,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateMoneyCounter
           )
         );
-        updateMoneyCounter(-ArcherTower.cost); // Update the money counter
+        updateMoneyCounter(-ArcherTower.cost); // Uppdaterar pengar efter vad som sattes ned
         occupiedCells.push({ x, y }); // Lägg till den upptagna cellen
       } else if (
         selectedTowerType === "Wizard Tower" &&
@@ -283,8 +281,8 @@ document.addEventListener("DOMContentLoaded", () => {
             updateMoneyCounter
           )
         );
-        updateMoneyCounter(-WizardTower.cost); // Update the money counter
-        occupiedCells.push({ x, y }); // Lägg till den upptagna cellen
+        updateMoneyCounter(-WizardTower.cost);
+        occupiedCells.push({ x, y });
       } else if (
         selectedTowerType === "Knight Tower" &&
         money >= KnightTower.cost
@@ -300,12 +298,13 @@ document.addEventListener("DOMContentLoaded", () => {
             updateMoneyCounter
           )
         );
-        updateMoneyCounter(-KnightTower.cost); // Update the money counter
-        occupiedCells.push({ x, y }); // Lägg till den upptagna cellen
+        updateMoneyCounter(-KnightTower.cost);
+        occupiedCells.push({ x, y });
       }
     }
   });
 
+  // Ger alla knapparna i menyn en funktion (en ID)
   const startButton = document.getElementById("start-button");
   const speedButton = document.getElementById("speed-button");
   const archerButton = document.getElementById("archer-button");
@@ -313,30 +312,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const knightButton = document.getElementById("knight-button");
 
   function headMenu() {
+    //Debugging från förr
     console.log("Wizard Button:", wizardButton);
     console.log("Archer Button:", archerButton);
     console.log("Knight Button:", knightButton);
-    // Funktion för att dölja muspekaren
 
+    //Startbutton, den startar spelet och kan pausa det
     startButton.addEventListener("click", () => {
       if (isGameRunning === false && isRoundActive === false) {
         isGameRunning = true; // Starta spelet
         isRoundActive = true; // Starta spelet
-        console.log("Start");
+        console.log("Start"); // Debugging
         startButton.textContent = "Pause";
         gameLoop();
       } else if (isGameRunning === true && isRoundActive === false) {
-        console.log("continue");
+        console.log("continue"); // Mer debugging
         isRoundActive = true; // Starta rundan
         startButton.textContent = "Pause"; // Ändra texten på knappen
       } else if (isGameRunning === true && isRoundActive === true) {
-        console.log("Pause");
-        isGameRunning = false; // Stoppa spelet
-        isRoundActive = false;
+        console.log("Pause"); // Ännu mer debugging
+        isGameRunning = false; // Stoppar spelet
+        isRoundActive = false; // Stoppar rundan
         startButton.textContent = "Start"; // Ändra texten på knappen
       }
     });
 
+    //Nästan detsamma som startknappen med hur dem fungerar, men gör andra saker (speed up, speed ner igen)
     speedButton.addEventListener("click", () => {
       if (isGameRunning === true && isRoundActive === true) {
         console.log("Speed button clicked");
