@@ -252,7 +252,7 @@ canvas {
     cursor: none;
 }
 
-#wavecounter {
+#wave-counter {
     background-image: url(../assets/UI/Ribbons/Ribbon_Red_3Slides.png);
     /* background-color: #798a8b;  */
     min-width: 22%;

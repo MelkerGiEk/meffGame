@@ -1,71 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tower Defense</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tower Defense</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    </head>
 
-<body>
+    <body>
 
-    <div class="game-container">
-        <div class="grid"></div>
-        <canvas id="gameCanvas" width="800" height="500"></canvas>
-    </div>
-    <div class="menu">
-        <div class="buttons">
-            <button id="start-button">Start</button>
-            <button id="speed-button">Speed: 1x</button>
-            <div id="wavecounter">Wave 1</div>
+        <div class="game-container">
+            <div class="grid"></div>
+            <canvas id="gameCanvas" width="800" height="500"></canvas>
         </div>
-        <div class="money-counter"></div>
-        <div class="lives-counter"></div><br>
-        <div class="character_titles">
-            <div class="c1 dropdown1">
-                <span> Archer </span>
-                <div class="dropdown-archer"> 
-                    <br>
-                    <br>
-                    <br> 
-                    Range: 200 <br>
-                    Damage: 1 <br>
-                    Fire Rate: 30 <br>
-                    Cost: 50 <br>
+        <div class="menu">
+            <div class="buttons">
+                <button id="start-button">Start</button>
+                <button id="speed-button">Speed: 1x</button>
+                <div id="wave-counter">Wave 1</div>
+            </div>
+            <div class="money-counter"></div>
+            <div class="lives-counter"></div><br>
+            <div class="character_titles">
+                <div class="c1 dropdown1">
+                    <span> Archer </span>
+                    <div class="dropdown-archer"> 
+                        <br>
+                        <br>
+                        <br> 
+                        Range: 200 <br>
+                        Damage: 1 <br>
+                        Fire Rate: 30 <br>
+                        Cost: 50 <br>
+                    </div>
+                </div>
+                <div class="c2 dropdown2">
+                    <span> Wizard </span>
+                    <div class="dropdown-wizard"> 
+                        <br>
+                        <br>
+                        <br> 
+                        Range: 120 <br>
+                        Damage: 1 <br>
+                        Fire Rate: 18 <br>
+                        Cost: 100 <br>
+                    </div>
+                </div>
+                <div class="c3 dropdown3">
+                    <span> Knight </span>
+                    <div class="dropdown-knight"> 
+                        <br>
+                        <br>
+                        <br> 
+                        Range: 100 <br>
+                        Damage: 1 <br>
+                        Fire Rate: 40 <br>
+                        Cost: 75 <br>
+                    </div>
                 </div>
             </div>
-            <div class="c2 dropdown2">
-                <span> Wizard </span>
-                <div class="dropdown-wizard"> 
-                    <br>
-                    <br>
-                    <br> 
-                    Range: 120 <br>
-                    Damage: 1 <br>
-                    Fire Rate: 18 <br>
-                    Cost: 100 <br>
-                </div>
-            </div>
-            <div class="c3 dropdown3">
-                <span> Knight </span>
-                <div class="dropdown-knight"> 
-                    <br>
-                    <br>
-                    <br> 
-                    Range: 100 <br>
-                    Damage: 1 <br>
-                    Fire Rate: 40 <br>
-                    Cost: 75 <br>
-                </div>
+            <div class="tower-container">
+                <button id="archer-button"></button>
+                <button id="wizard-button"></button>
+                <button id="knight-button"></button>
             </div>
         </div>
-        <div class="tower-container">
-            <button id="archer-button"></button>
-            <button id="wizard-button"></button>
-            <button id="knight-button"></button>
-        </div>
-    </div>
-    <img src="assets/UI/Pointers/01.png" id="custom-cursor">
-    <script type="module" src="script/gameloop.js" defer></script>
-</body>
+        <img src="assets/UI/Pointers/01.png" id="custom-cursor">
+        <script type="module" src="script/gameloop.js" defer></script>
+    </body>
+</html>

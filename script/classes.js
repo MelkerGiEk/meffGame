@@ -21,11 +21,11 @@ export class Enemy {
     this.health = 3;
     this.isDead = false;
     this.enemies = enemies; // Array för fiender
-    this.worth = 5; // Belöning för att döda fienden
+    this.worth = 4; // Belöning för att döda fienden
     this.damage = 1; // Skada som fienden orsakar
     this.killCountRef = killCountRef; // Referens till kill count
   }
-
+  // ger fienden sin position
   move() {
     let nextPoint = this.path[this.currentPoint + 1];
     let dx = nextPoint.x - this.x;
@@ -39,25 +39,28 @@ export class Enemy {
       this.y += (dy / distance) * this.speed;
     }
   }
-
+  // hanterar fiender som passerar stigen
   isAtEnd() {
     if (this.currentPoint >= this.path.length - 1) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateLivesCounter(this.damage); // Ta bort liv när fienden når slutet
-      this.killCountRef.value++;
-      console.log("Kill count: " + this.killCountRef.value);
+      this.increaseKillCount();
     }
   }
-
+  // hanterar fiender som dör
   checkIfDead() {
     if (this.isDead === true) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateMoneyCounter(this.worth); // Belöning för att döda fienden
-      this.killCountRef.value++;
-      console.log("Kill count: " + this.killCountRef.value);
+      this.increaseKillCount();
     }
   }
-
+  // ökar kill count för att kunna öka rundor
+  increaseKillCount() {
+    this.killCountRef.value++;
+    console.log("Kill count: " + this.killCountRef.value);
+  }
+  // ritar fienden
   draw(ctx) {
     ctx.fillStyle = "green";
     ctx.fillRect(
@@ -120,8 +123,7 @@ export class slowEnemy extends Enemy {
     if (this.currentPoint >= this.path.length - 1) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateLivesCounter(this.damage); // Ta bort liv när fienden når slutet
-      this.killCountRef.value++;
-      console.log("Kill count: " + this.killCountRef.value);
+      this.increaseKillCount();
     }
   }
 
@@ -129,9 +131,13 @@ export class slowEnemy extends Enemy {
     if (this.isDead === true) {
       this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
       this.updateMoneyCounter(this.worth); // Belöning för att döda fienden
-      this.killCountRef.value++;
-      console.log("Kill count: " + this.killCountRef.value);
+      this.increaseKillCount();
     }
+  }
+
+  increaseKillCount() {
+    this.killCountRef.value++;
+    console.log("Kill count: " + this.killCountRef.value);
   }
 
   draw(ctx) {
@@ -209,32 +215,77 @@ export class PiercingProjectile extends Projectile {
     this.x = x;
     this.y = y;
     this.target = target;
-    this.speed = 5 * gameSpeed; // Hastighet för projektilen
+    this.speed = 6 * gameSpeed; // Hastighet för projektilen
     this.projectiles = projectiles;
     this.enemies = enemies; // Array för fiender
     this.updateMoneyCounter = updateMoneyCounter;
+    this.remainingPenetrations = 3; // Antal fiender som projektilen kan penetrera
+    this.range = 350; // Räckvidd för projektilen
+    this.distanceTraveled = 0; // Avstånd som projektilen har färdats
   }
   move() {
-    let dx = this.target.x - this.x;
-    let dy = this.target.y - this.y;
-    let distance = Math.hypot(dx, dy);
-    this.x += (dx / distance) * this.speed;
-    this.y += (dy / distance) * this.speed;
+    try {
+      let dx = this.target.x - this.x;
+      let dy = this.target.y - this.y;
+      let distance = Math.hypot(dx, dy);
+
+      // Uppdatera position och räknare för färdad sträcka
+      this.x += (dx / distance) * this.speed;
+      this.y += (dy / distance) * this.speed;
+      this.distanceTraveled += this.speed;
+
+      // Ta bort projektilen om den har färdats längre än sin räckvidd
+      if (this.distanceTraveled >= this.range) {
+        this.projectiles.splice(this.projectiles.indexOf(this), 1);
+      }
+      this.checkTargetState();
+    } catch (error) {
+      console.error("No worries:", error);
+      this.projectiles.splice(this.projectiles.indexOf(this), 1);
+      return;
+    }
   }
 
   checkCollision() {
-    let dx = this.target.x - this.x;
-    let dy = this.target.y - this.y;
-    let distance = Math.hypot(dx, dy);
+    this.enemies.forEach((enemy) => {
+      let dx = enemy.x - this.x;
+      let dy = enemy.y - this.y;
+      let distance = Math.hypot(dx, dy);
 
-    if (distance < this.speed + this.target.size / 2) {
-      this.projectiles.splice(this.projectiles.indexOf(this), 1);
-      this.target.health--;
-      if (this.target.health <= 0) {
-        this.target.isDead = true;
+      // Kontrollera om projektilen träffar en fiende
+      if (distance < this.speed + enemy.size / 2) {
+        if (this.target.isDead) {
+          enemy = this.enemies.find(
+            (enemy) =>
+              Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
+          );
+        }
+        this.target.health = this.target.health - 0.5; // Minska fiendens hälsa
+        this.target = this.enemies.find(
+          (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
+        );
+        if (this.target.health <= 0) {
+          this.target.isDead = true;
+        }
+
+        // Minska antalet penetrationer och ta bort projektilen om den inte kan penetrera fler fiender
+        this.remainingPenetrations--;
+        if (this.remainingPenetrations <= 0) {
+          this.projectiles.splice(this.projectiles.indexOf(this), 1);
+        }
       }
+    });
+  }
+  checkTargetState() {
+    if (this.target.isDead || !this.target) {
+      this.target = this.enemies.find(
+        (enemy) => Math.hypot(enemy.x - this.x, enemy.y - this.y) < this.range
+      );
+    } else if (!this.target) {
+      this.projectiles.splice(this.projectiles.indexOf(this), 1);
     }
   }
+
   draw(ctx) {
     ctx.fillStyle = "red";
     ctx.beginPath();
@@ -308,8 +359,8 @@ export class ArcherTower extends Tower {
     updateMoneyCounter
   ) {
     super(x, y, gridSize, gameSpeed, enemies, projectiles, updateMoneyCounter); // Anropa basklassens konstruktor
-    this.range = 200;
-    this.fireRate = 30 / gameSpeed; // Snabbare skott
+    this.range = 150;
+    this.fireRate = 40 / gameSpeed; // Snabbare skott
     this.color = "red"; // Specifik färg för Archer Tower
     this.name = "Archer Tower"; // Namn på tornet
     this.enemies = enemies; // Store the enemies array
@@ -364,8 +415,8 @@ export class WizardTower extends Tower {
     updateMoneyCounter
   ) {
     super(x, y, gridSize, gameSpeed, enemies, projectiles, updateMoneyCounter); // Anropa basklassens konstruktor
-    this.range = 120;
-    this.fireRate = 18 / gameSpeed; // Långsammare skott
+    this.range = 125;
+    this.fireRate = 25 / gameSpeed; // Långsammare skott
     this.color = "purple"; // Specifik färg för Wizard Tower
     this.name = "Wizard Tower"; // Namn på tornet
     this.enemies = enemies; // Store the enemies array
