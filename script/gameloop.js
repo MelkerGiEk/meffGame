@@ -398,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else if (isGameRunning === false && isRoundActive === false) {
         gameSpeed = 1; // Återställ hastigheten
-        return frame;
+        return frame; // Användes förr för slowEnemy (inte längre onödig)
       }
     });
     if (!archerButton) {

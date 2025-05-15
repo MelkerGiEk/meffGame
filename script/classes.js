@@ -1,4 +1,6 @@
 export class Enemy {
+  // Konstruktor för fienden (med egenskaper)
+  // path är en array av punkter
   constructor(
     path,
     gridSize,
@@ -249,6 +251,7 @@ export class Projectile {
     this.updateMoneyCounter = updateMoneyCounter;
   }
 
+  // Flytta projektilen mot target
   move() {
     let dx = this.target.x - this.x;
     let dy = this.target.y - this.y;
@@ -257,6 +260,7 @@ export class Projectile {
     this.y += (dy / distance) * this.speed;
   }
 
+  // Kontrollera om projektilen träffar fienden
   checkCollision() {
     let dx = this.target.x - this.x;
     let dy = this.target.y - this.y;
@@ -271,6 +275,7 @@ export class Projectile {
     }
   }
 
+  //ctx är kontexten för canvas
   draw(ctx) {
     ctx.fillStyle = "darkgrey";
     ctx.beginPath();
@@ -302,6 +307,7 @@ export class PiercingProjectile extends Projectile {
     this.range = 350; // Räckvidd för projektilen
     this.distanceTraveled = 0; // Avstånd som projektilen har färdats
   }
+
   move() {
     try {
       let dx = this.target.x - this.x;
@@ -355,6 +361,8 @@ export class PiercingProjectile extends Projectile {
       }
     });
   }
+
+  // Kontrollera om projektilen fortfarande har en giltig måltavla
   checkTargetState() {
     if (this.target.isDead || !this.target) {
       this.target = this.enemies.find(
@@ -394,15 +402,8 @@ export class Tower {
     this.gameSpeed = gameSpeed;
     this.updateMoneyCounter = updateMoneyCounter; // Funktion för att uppdatera pengarna
   }
-  draw(ctx) {
-    ctx.fillStyle = "blue";
-    ctx.fillRect(
-      this.x - this.size / 2,
-      this.y - this.size / 2,
-      this.size,
-      this.size
-    );
-  }
+
+  // Skottfrekvens
   shoot(frame) {
     if (frame - this.lastShot > this.fireRate) {
       let target = this.enemies.find(
@@ -423,6 +424,17 @@ export class Tower {
         this.lastShot = frame;
       }
     }
+  }
+
+  // Rita tornet
+  draw(ctx) {
+    ctx.fillStyle = "blue";
+    ctx.fillRect(
+      this.x - this.size / 2,
+      this.y - this.size / 2,
+      this.size,
+      this.size
+    );
   }
 }
 
