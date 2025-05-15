@@ -5,6 +5,7 @@ import {
   ArcherTower,
   WizardTower,
   KnightTower,
+  bossEnemy,
 } from "./classes.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -35,22 +36,22 @@ document.addEventListener("DOMContentLoaded", () => {
     [2, 4],
     [3, 4],
     [4, 4],
-    [5, 4],
-    [5, 5],
-    [5, 6],
+    [4, 5],
+    [4, 6],
+    [4, 7],
     [5, 7],
     [6, 7],
     [7, 7],
-    [8, 7],
-    [8, 6],
-    [8, 5],
-    [8, 4],
+    [7, 6],
+    [7, 5],
+    [7, 4],
+    [7, 3],
     [8, 3],
     [9, 3],
     [10, 3],
-    [11, 3],
-    [11, 4],
-    [11, 5],
+    [10, 4],
+    [10, 5],
+    [10, 6],
     [11, 6],
     [12, 6],
     [13, 6],
@@ -102,7 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let enemySpawnTimer = 100; // Tid mellan spawn i frames
   let enemySpawnInterval = 100; // Standard spawn-intervall
   let slowEnemySpawnTimer = 100;
-  let slowEnemySpawnInterval = 100;
+  let slowEnemySpawnInterval = 400;
+  let bossSpawnTimer = 100;
+  let bossSpawnInterval = 2000; // Tid mellan boss-spawn i frames
 
   // Gameloop
   function gameLoop() {
@@ -119,8 +122,25 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Hantera fiendespawn
-    enemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
+
+    bossSpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
     if (isRoundActive) {
+      if (currentWave >= 15 && bossSpawnTimer <= 0) {
+        console.log("Boss is here:", isRoundActive);
+        enemies.push(
+          new bossEnemy(
+            path,
+            gridSize,
+            gameSpeed,
+            updateLivesCounter,
+            updateMoneyCounter,
+            enemies,
+            killCount
+          )
+        ); // Skapa en ny fiende
+        bossSpawnTimer = bossSpawnInterval; // Återställ spawn-timern
+      }
+      enemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
       // Skapar en ny fiende baserat på tiden och lägger till den i listan
       if (enemySpawnTimer <= 0) {
         enemies.push(
@@ -138,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       slowEnemySpawnTimer -= gameSpeed; // Minska spawn-tiden baserat på gameSpeed
-      if ((slowEnemySpawnTimer = 100 && frame % 300 === 0)) {
+      if (slowEnemySpawnTimer <= 0) {
         enemies.push(
           new slowEnemy(
             path,
@@ -221,18 +241,30 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currentWave % 5 === 0 && currentWave > 1) {
       intervall += 20;
       if (currentWave >= 10) {
-        intervall += 20;
+        intervall += 15;
       }
     }
     if (killCount.value % intervall === 0 && killCount.value > 1) {
       currentWave++;
       if (currentWave <= 5) {
         enemySpawnInterval -= 10; // Minska spawn-tiden för nästa våg
+        slowEnemySpawnInterval -= 10; // Minska spawn-tiden för nästa våg
+      } else if (currentWave <= 15) {
+        slowEnemySpawnInterval -= 20;
+        enemySpawnInterval -= 4;
+        bossSpawnInterval -= 50;
       } else {
-        enemySpawnInterval -= 5;
+        enemySpawnInterval -= 0.1;
+        slowEnemySpawnInterval -= 7;
+        if (bossSpawnInterval >= 600) {
+          bossSpawnInterval -= 50;
+        } else {
+          bossSpawnInterval -= 350;
+        }
       }
       isRoundActive = false;
       waveCounter.textContent = `Wave: ${currentWave}`;
+      killCount.value++;
     }
   }
 

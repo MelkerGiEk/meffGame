@@ -151,6 +151,85 @@ export class slowEnemy extends Enemy {
   }
 }
 
+export class bossEnemy extends Enemy {
+  constructor(
+    path,
+    gridSize,
+    gameSpeed,
+    updateLivesCounter,
+    updateMoneyCounter,
+    enemies,
+    worth,
+    damage,
+    killCountRef
+  ) {
+    super(
+      path,
+      gridSize,
+      gameSpeed,
+      updateLivesCounter,
+      updateMoneyCounter,
+      enemies,
+      worth,
+      damage,
+      killCountRef
+    ); // Anropa basklassens konstruktor
+    this.size = gridSize;
+    this.speed = 0.75 * gameSpeed;
+    this.health = 75;
+    this.enemies = enemies; // Array för fiender
+    this.updateLivesCounter = updateLivesCounter; // Funktion för att uppdatera livräknaren
+    this.updateMoneyCounter = updateMoneyCounter; // Funktion för att uppdatera pengarna
+    this.worth = 100; // Belöning för att döda fienden
+    this.damage = 10; // Skada som fienden orsakar
+  }
+
+  move() {
+    let nextPoint = this.path[this.currentPoint + 1];
+    let dx = nextPoint.x - this.x;
+    let dy = nextPoint.y - this.y;
+    let distance = Math.hypot(dx, dy);
+
+    if (distance < this.speed) {
+      this.currentPoint++;
+    } else {
+      this.x += (dx / distance) * this.speed;
+      this.y += (dy / distance) * this.speed;
+    }
+  }
+
+  isAtEnd() {
+    if (this.currentPoint >= this.path.length - 1) {
+      this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
+      this.updateLivesCounter(this.damage); // Ta bort liv när fienden når slutet
+      this.increaseKillCount();
+    }
+  }
+
+  checkIfDead() {
+    if (this.isDead === true) {
+      this.enemies.splice(this.enemies.indexOf(this), 1); // Ta bort fienden från arrayen
+      this.updateMoneyCounter(this.worth); // Belöning för att döda fienden
+      this.increaseKillCount();
+    }
+  }
+
+  increaseKillCount() {
+    this.killCountRef.value += 3;
+    console.log("Kill count: " + this.killCountRef.value);
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = "darkred"; // Ändra färgen för den lilla fienden
+    ctx.fillRect(
+      this.x - this.size / 2,
+      this.y - this.size / 2,
+      this.size,
+      this.size
+    );
+  }
+}
+
 export class Projectile {
   constructor(
     x,
@@ -348,7 +427,7 @@ export class Tower {
 }
 
 export class ArcherTower extends Tower {
-  static cost = 50;
+  static cost = 35;
   constructor(
     x,
     y,
@@ -359,8 +438,8 @@ export class ArcherTower extends Tower {
     updateMoneyCounter
   ) {
     super(x, y, gridSize, gameSpeed, enemies, projectiles, updateMoneyCounter); // Anropa basklassens konstruktor
-    this.range = 150;
-    this.fireRate = 40 / gameSpeed; // Snabbare skott
+    this.range = 170;
+    this.fireRate = 34 / gameSpeed; // Snabbare skott
     this.color = "red"; // Specifik färg för Archer Tower
     this.name = "Archer Tower"; // Namn på tornet
     this.enemies = enemies; // Store the enemies array
